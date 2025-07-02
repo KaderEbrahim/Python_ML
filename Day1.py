@@ -1,26 +1,15 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import LabelEncoder
 
-#loading dataset
-df=pd.read_csv('Iris.csv')
-print(df)
+file = input("Enter the path to the iris CSV file: ")
+iris_data = pd.read_csv(file)
 
-#general statistics
-print(df.describe())
-categorical_cols = df.select_dtypes(include='object').columns
-print(df[categorical_cols].describe())
+if iris_data.isnull().values.any():
+    print("\nColumns with null values:")
+    for col in iris_data.columns:
+        if iris_data[col].isnull().any():
+            print(f"{col}: {iris_data[col].isnull().sum()} null value(s)")
 
-#filtering rows where petallength greater than 1.5
-filtered_df = df[df['PetalLengthCm'] > 1.5]
-print(filtered_df)
-
-#Encoding species
-le = LabelEncoder()
-df['Species_encoded'] = le.fit_transform(df['Species'])
-print(df[['Species', 'Species_encoded']])
-
-#creating petal ratio
-df['Petalratio'] = df['PetalLengthCm']/df['PetalWidthCm']
-print(df[['PetalLengthCm','PetalWidthCm','Petalratio']])
+    print("\nRows with null values:")
+    print(iris_data[iris_data.isnull().any(axis=1)].to_string(index=False))
+else:
+    print("\nNo null values found in the dataset.")
